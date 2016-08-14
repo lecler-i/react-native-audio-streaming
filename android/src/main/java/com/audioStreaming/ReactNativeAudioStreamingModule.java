@@ -50,7 +50,7 @@ public class ReactNativeAudioStreamingModule extends ReactContextBaseJavaModule 
   }
 
   public Signal getSignal() {
-    return signal;
+    return this.signal;
   }
 
   public void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
@@ -92,8 +92,7 @@ public class ReactNativeAudioStreamingModule extends ReactContextBaseJavaModule 
   @ReactMethod
   public void play(String streamingURL) {
     this.streamingURL = streamingURL;
-    signal.setURLStreaming(streamingURL); // URL of MP3 or AAC stream
-    signal.play();
+    signal.play(streamingURL);
     signal.showNotification();
   }
 
@@ -104,14 +103,12 @@ public class ReactNativeAudioStreamingModule extends ReactContextBaseJavaModule 
 
   @ReactMethod
   public void pause() {
-    // Not implemented on aac
-    this.stop();
+    signal.pause();
   }
 
   @ReactMethod
   public void resume() {
-    // Not implemented on aac
-    this.play(this.streamingURL);
+    signal.resume();
   }
 
   @ReactMethod
@@ -122,7 +119,7 @@ public class ReactNativeAudioStreamingModule extends ReactContextBaseJavaModule 
   @ReactMethod
   public void getStatus(Callback callback) {
     WritableMap state = Arguments.createMap();
-    state.putString("status", signal != null && signal.isPlaying ? Mode.PLAYING : Mode.STOPPED);
+    // state.putString("status", signal != null && signal.isPlaying() ? Mode.PLAYING : Mode.STOPPED);
     callback.invoke(null, state);
   }
 }
